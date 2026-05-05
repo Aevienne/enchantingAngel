@@ -1,6 +1,6 @@
 # enchantingAngel
 
-A Minecraft 1.21.11 Paper plugin that adds **book-based custom enchantments** to your server. Players can obtain custom enchant books, apply them with anvils, and use enchant effects powered by Persistent Data Container (PDC) tags and lore-based display.[web:219][web:223]
+A Minecraft 1.21.11 Paper plugin that adds **book-based custom enchantments** to your server. Players can obtain custom enchant books, apply them with anvils, and use enchant effects powered by Persistent Data Container (PDC) tags and lore-based display.
 
 ---
 
@@ -34,12 +34,12 @@ A Minecraft 1.21.11 Paper plugin that adds **book-based custom enchantments** to
 
 ## How It Works
 
-This plugin uses a **custom enchant book** flow instead of trying to register vanilla-style server enchants directly.[web:219][web:223]
+This plugin uses a **custom enchant book** flow instead of trying to register vanilla-style server enchants directly.
 
 1. A custom enchant book is created with stored enchant ID and level data.
 2. The player applies the book to a supported item using an anvil.
 3. The enchant is saved onto the item using PDC keys and lore.
-4. Listeners detect the enchant later during combat or mob kills and trigger the matching effect.[web:219]
+4. Listeners detect the enchant later during combat or mob kills and trigger the matching effect.
 
 ---
 
@@ -150,7 +150,7 @@ src/main/java/me/angelique/enchantingAngel/
 
 ## Notes
 
-- This plugin uses PDC and lore for enchant identification rather than full vanilla enchant registration, which is a common and safer pattern for custom enchant systems on Paper.[web:219]
+- This plugin uses PDC and lore for enchant identification rather than full vanilla enchant registration, which is a common and safer pattern for custom enchant systems on Paper.
 - Book application and enchant detection are handled entirely in plugin logic.
 - If you add new enchants, register them in the registry and implement their trigger behavior in the relevant listener flow.
 
