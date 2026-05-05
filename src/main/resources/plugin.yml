@@ -1,0 +1,15 @@
+name: enchantingAngel
+version: 1.1.0
+main: me.angelique.enchantingAngel.EnchantingAngel
+api-version: '1.21'
+authors: [Angelique]
+description: Modular book-based custom enchantment framework for Paper 1.21.
+commands:
+  ce:
+    description: Custom enchantment admin command.
+    usage: /ce givebook <player> <enchant> <level>
+permissions:
+  enchantingangel.use:
+    default: true
+  enchantingangel.admin:
+    default: op

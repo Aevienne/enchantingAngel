@@ -1,0 +1,19 @@
+custom-book-system:
+  enchanting-table-chance: 0.08
+  add-book-directly-to-inventory: true
+  broadcast-rare-books: false
+
+custom-enchants:
+  mobaura:
+    enabled: true
+    max-level: 3
+    weight: 10
+    min-enchanting-level: 15
+    radius-per-level: 2.5
+    damage-per-level: 1.5
+  experience:
+    enabled: true
+    max-level: 2
+    weight: 12
+    min-enchanting-level: 8
+    bonus-multiplier-per-level: 1.0
