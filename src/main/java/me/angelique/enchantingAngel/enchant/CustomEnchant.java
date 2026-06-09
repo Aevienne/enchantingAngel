@@ -27,6 +27,17 @@ public interface CustomEnchant {
 
     boolean isEnabled();
 
+    /**
+     * Returns the material this enchant requires from the company's factory pool
+     * when being applied via anvil, or null if no material is required.
+     * Format: materialName (e.g., "IRON_INGOT") — amount scales by level.
+     */
+    default MaterialRequirement getMaterialRequirement() {
+        return null;
+    }
+
+    record MaterialRequirement(String materialName, int amountPerLevel) {}
+
     default void onAttack(Player attacker, EntityDamageByEntityEvent event, int level) {
     }
 

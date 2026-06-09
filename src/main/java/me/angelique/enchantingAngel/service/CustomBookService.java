@@ -14,6 +14,8 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
+import java.util.function.Function;
 
 public final class CustomBookService {
     private final EnchantingAngel plugin;
@@ -21,12 +23,19 @@ public final class CustomBookService {
     private final CustomEnchantService enchantService;
     private final EnchantConfig config;
     private final Random random = new Random();
+    private EnchantMaterialPool materialPool;
+    private Function<UUID, String> companyResolver; // player UUID -> companyId
 
     public CustomBookService(EnchantingAngel plugin, CustomEnchantRegistry registry, CustomEnchantService enchantService, EnchantConfig config) {
         this.plugin = plugin;
         this.registry = registry;
         this.enchantService = enchantService;
         this.config = config;
+    }
+
+    public void setMaterialPool(EnchantMaterialPool pool, Function<UUID, String> resolver) {
+        this.materialPool = pool;
+        this.companyResolver = resolver;
     }
 
     public ItemStack createBook(CustomEnchant enchant, int level) {
@@ -125,6 +134,15 @@ public final class CustomBookService {
     }
 
     public ItemStack applyBookToItem(ItemStack target, ItemStack book) {
+        return applyBookToItem(target, book, null);
+    }
+
+    /**
+     * Applies a custom enchant book to an item. If the enchant has a material requirement
+     * and a player is provided, the cost is checked against the company's factory pool.
+     * Returns null if the enchant cannot be applied (wrong target, missing materials, etc.).
+     */
+    public ItemStack applyBookToItem(ItemStack target, ItemStack book, Player player) {
         if (target == null || book == null || !isCustomBook(book)) {
             return null;
         }
@@ -133,11 +151,37 @@ public final class CustomBookService {
         if (enchant == null || level <= 0) {
             return null;
         }
+
+        // Check and consume material requirement from company factory pool
+        if (player != null && materialPool != null && companyResolver != null) {
+            CustomEnchant.MaterialRequirement req = enchant.getMaterialRequirement();
+            if (req != null) {
+                String companyId = companyResolver.apply(player.getUniqueId());
+                int needed = req.amountPerLevel() * level;
+                int have = materialPool.getAmount(companyId, req.materialName());
+                if (have < needed) {
+                    player.sendMessage("§8[§denchantingAngel§8] §cNeed §e" + needed + "x "
+                            + formatName(req.materialName()) + " §cfrom factory production. Have §e" + have + "§c.");
+                    return null;
+                }
+                materialPool.consume(companyId, req.materialName(), needed);
+            }
+        }
+
         ItemStack result = target.clone();
         if (!enchantService.applyEnchant(result, enchant, level)) {
             return null;
         }
         return result;
+    }
+
+    private static String formatName(String key) {
+        String[] words = key.toLowerCase().replace("_", " ").split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (String w : words) {
+            if (!w.isEmpty()) sb.append(Character.toUpperCase(w.charAt(0))).append(w.substring(1)).append(" ");
+        }
+        return sb.toString().trim();
     }
 
     private String formatMaterials(CustomEnchant enchant) {

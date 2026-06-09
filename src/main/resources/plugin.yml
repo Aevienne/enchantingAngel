@@ -2,6 +2,7 @@ name: enchantingAngel
 version: 1.1.0
 main: me.angelique.enchantingAngel.EnchantingAngel
 api-version: '1.21'
+softdepend: [AngelNCore]
 authors: [Angelique]
 description: Modular book-based custom enchantment framework for Paper 1.21.
 commands:

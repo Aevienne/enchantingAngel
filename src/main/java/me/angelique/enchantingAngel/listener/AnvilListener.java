@@ -57,6 +57,15 @@ public final class AnvilListener implements Listener {
         if (event.getClick() != ClickType.LEFT && event.getClick() != ClickType.SHIFT_LEFT) {
             return;
         }
+
+        // Check + consume material requirement (cancels if insufficient)
+        ItemStack enchanted = bookService.applyBookToItem(left, right, player);
+        if (enchanted == null) {
+            // Material check failed — cancel the take and clear result so player isn't confused
+            event.setCancelled(true);
+            return;
+        }
+
         player.getServer().getScheduler().runTaskLater(player.getServer().getPluginManager().getPlugin("enchantingAngel"), () -> {
             anvilInventory.setFirstItem(null);
             ItemStack updatedBook = right.clone();
